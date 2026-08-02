@@ -33,10 +33,11 @@ const img = {
   shepherd: '/images/22cac9_c66ffdd3586b4d18a5d99cfe287f5244.jpg',
   coffee: '/images/22cac9_c563bbc097c54041b32312f17aa12e37.png',
   fries: '/images/fries-menu.jpg',
-  // Produits vérifiés
-  merguez: '/images/merguez.jpg',
+  // Produits vérifiés — plats cuisinés (pas de barquettes)
+  merguez: '/images/sandwich-merguez.jpg',
+  assietteMerguez: '/images/assiette-merguez.jpg',
   tzatziki: '/images/tzatziki.jpg',
-  dolma: '/images/dolma.jpg',
+  dolma: '/images/feuilles-vigne.jpg',
   baklava: '/images/baklava.jpg',
   cremeBrulee: '/images/creme-brulee.jpg',
   ileFlottante: '/images/ile-flottante.jpg',
@@ -178,7 +179,7 @@ export const menuCategories: MenuCategory[] = [
       { id: 'assietteKebab', price: '8,00 €', image: img.kebabPlate },
       { id: 'assietteKofte', price: '8,00 €', image: img.koftePlate },
       { id: 'assietteMixte', price: '12,00 €', image: img.mixte },
-      { id: 'assietteMerguez', price: '8,00 €', image: img.merguez },
+      { id: 'assietteMerguez', price: '8,00 €', image: img.assietteMerguez },
       { id: 'assietteSteak', price: '8,00 €', image: img.steakSandwich, cutout: true },
       { id: 'assietteCotelette', price: '10,00 €', image: img.cotelette },
       {
