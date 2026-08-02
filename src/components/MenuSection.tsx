@@ -1,9 +1,12 @@
 import { useRef, useState, type PointerEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { menuCategories, type MenuItem } from '../data'
+import { useLanguage } from '../i18n/LanguageContext'
 
 function ProductCard({ item, index }: { item: MenuItem; index: number }) {
+  const { t } = useLanguage()
   const cardRef = useRef<HTMLLIElement>(null)
+  const copy = t.menu.items[item.id]
 
   const onMove = (e: PointerEvent<HTMLLIElement>) => {
     const el = cardRef.current
@@ -20,6 +23,8 @@ function ProductCard({ item, index }: { item: MenuItem; index: number }) {
     el.style.transform = 'perspective(900px) rotateY(0deg) rotateX(0deg) translateY(0)'
   }
 
+  if (!copy) return null
+
   return (
     <motion.li
       ref={cardRef}
@@ -32,17 +37,17 @@ function ProductCard({ item, index }: { item: MenuItem; index: number }) {
     >
       {item.image && (
         <div className="product-card-media">
-          <img src={item.image} alt={item.name} loading="lazy" />
+          <img src={item.image} alt={copy.name} loading="lazy" />
         </div>
       )}
       <div className="product-card-body">
         <div className="product-card-top">
-          <h3 className="product-card-name">{item.name}</h3>
+          <h3 className="product-card-name">{copy.name}</h3>
           <span className="product-card-price">{item.price}</span>
         </div>
-        {item.desc && <p className="product-card-desc">{item.desc}</p>}
-        {item.priceAlt && (
-          <span className="product-card-alt">{item.priceAlt}</span>
+        {copy.desc && <p className="product-card-desc">{copy.desc}</p>}
+        {copy.priceAlt && (
+          <span className="product-card-alt">{copy.priceAlt}</span>
         )}
       </div>
     </motion.li>
@@ -50,8 +55,13 @@ function ProductCard({ item, index }: { item: MenuItem; index: number }) {
 }
 
 export function MenuSection() {
+  const { t } = useLanguage()
   const [active, setActive] = useState(menuCategories[0].id)
   const category = menuCategories.find((c) => c.id === active)!
+  const note =
+    category.noteKey && t.menu.notes[category.noteKey]
+      ? t.menu.notes[category.noteKey]
+      : undefined
 
   return (
     <section id="menu" className="section menu-section">
@@ -62,15 +72,12 @@ export function MenuSection() {
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.7 }}
       >
-        <span className="section-label">La carte</span>
-        <h2 className="section-title">Notre menu</h2>
-        <p className="section-desc">
-          Sandwichs, assiettes, entrées et desserts — une cuisine turque
-          généreuse à prix accessibles.
-        </p>
+        <span className="section-label">{t.menu.label}</span>
+        <h2 className="section-title">{t.menu.title}</h2>
+        <p className="section-desc">{t.menu.desc}</p>
       </motion.div>
 
-      <div className="menu-tabs" role="tablist" aria-label="Catégories du menu">
+      <div className="menu-tabs" role="tablist" aria-label={t.menu.tabsAria}>
         {menuCategories.map((cat) => (
           <button
             key={cat.id}
@@ -79,7 +86,7 @@ export function MenuSection() {
             className={`menu-tab ${active === cat.id ? 'active' : ''}`}
             onClick={() => setActive(cat.id)}
           >
-            {cat.title}
+            {t.menu.categories[cat.id]}
           </button>
         ))}
       </div>
@@ -92,10 +99,10 @@ export function MenuSection() {
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
-          {category.note && <p className="menu-note">{category.note}</p>}
+          {note && <p className="menu-note">{note}</p>}
           <ul className="product-grid">
             {category.items.map((item, i) => (
-              <ProductCard key={item.name} item={item} index={i} />
+              <ProductCard key={item.id} item={item} index={i} />
             ))}
           </ul>
         </motion.div>

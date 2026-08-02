@@ -5,8 +5,11 @@ import { Gallery3D } from './components/Gallery3D'
 import { MenuSection } from './components/MenuSection'
 import { StorySection } from './components/StorySection'
 import { ContactSection } from './components/ContactSection'
+import { LangSwitcher } from './components/LangSwitcher'
+import { useLanguage } from './i18n/LanguageContext'
 
 export default function App() {
+  const { t, dir } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { scrollY } = useScroll()
@@ -34,32 +37,35 @@ export default function App() {
           <ul className="nav-links">
             <li>
               <a href="#galerie" onClick={closeMenu}>
-                Galerie
+                {t.nav.gallery}
               </a>
             </li>
             <li>
               <a href="#histoire" onClick={closeMenu}>
-                Histoire
+                {t.nav.story}
               </a>
             </li>
             <li>
               <a href="#menu" onClick={closeMenu}>
-                Menu
+                {t.nav.menu}
               </a>
             </li>
             <li>
               <a href="#contact" onClick={closeMenu}>
-                Contact
+                {t.nav.contact}
               </a>
             </li>
           </ul>
         </nav>
-        <a className="nav-cta" href={restaurant.phoneHref}>
-          Appeler
-        </a>
+        <div className="nav-actions">
+          <LangSwitcher />
+          <a className="nav-cta" href={restaurant.phoneHref}>
+            {t.nav.call}
+          </a>
+        </div>
         <button
           className="nav-toggle"
-          aria-label={menuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+          aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -68,7 +74,7 @@ export default function App() {
       </header>
 
       <main id="top">
-        <section className="hero" aria-label="Accueil">
+        <section className="hero" aria-label={t.hero.homeAria}>
           <motion.div className="hero-bg-motion" style={{ y: bgY, scale: bgScale }}>
             <div
               className="hero-bg"
@@ -93,8 +99,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             >
-              Le goût de Mersin à Combs-la-Ville — grillades, tantuni et kebab,
-              viandes préparées 100&nbsp;% maison.
+              {t.hero.lead}
             </motion.p>
             <motion.div
               className="hero-actions"
@@ -103,17 +108,17 @@ export default function App() {
               transition={{ duration: 0.7, delay: 0.3 }}
             >
               <a className="btn btn-primary" href="#menu">
-                Voir le menu
+                {t.hero.viewMenu}
               </a>
               <a className="btn btn-ghost" href="#contact">
-                Nous trouver
+                {t.hero.findUs}
               </a>
             </motion.div>
           </div>
 
           <motion.div
             className="hero-float"
-            initial={{ opacity: 0, x: 60, rotateY: -20 }}
+            initial={{ opacity: 0, x: dir === 'rtl' ? -60 : 60, rotateY: dir === 'rtl' ? 20 : -20 }}
             animate={{ opacity: 1, x: 0, rotateY: 0 }}
             transition={{ duration: 1.1, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             aria-hidden
@@ -122,7 +127,7 @@ export default function App() {
           </motion.div>
 
           <div className="hero-scroll" aria-hidden>
-            Découvrir
+            {t.hero.discover}
             <i />
           </div>
         </section>
@@ -139,7 +144,7 @@ export default function App() {
           <br />
           {restaurant.owner} · {restaurant.city}
         </div>
-        <p>Ouvert tous les jours · 11h00 – 22h30</p>
+        <p>{t.footer.hours}</p>
       </footer>
     </>
   )

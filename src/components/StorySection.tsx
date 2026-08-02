@@ -1,19 +1,22 @@
 import { motion } from 'framer-motion'
-import { heroBg, restaurant } from '../data'
+import { heroBg } from '../data'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export function StorySection() {
+  const { t, dir } = useLanguage()
+
   return (
     <section id="histoire" className="section story-section">
       <div className="story-grid">
         <motion.div
           className="story-visual"
-          initial={{ opacity: 0, rotateY: -12, x: -40 }}
+          initial={{ opacity: 0, rotateY: dir === 'rtl' ? 12 : -12, x: dir === 'rtl' ? 40 : -40 }}
           whileInView={{ opacity: 1, rotateY: 0, x: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           style={{ perspective: 1000 }}
         >
-          <img src={heroBg} alt="Terrasse de Tantuni Grill à Combs-la-Ville" />
+          <img src={heroBg} alt={t.story.terraceAlt} />
           <span className="story-badge">Combs-la-Ville</span>
         </motion.div>
 
@@ -24,30 +27,26 @@ export function StorySection() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, delay: 0.1 }}
         >
-          <span className="section-label">Notre histoire</span>
-          <h2 className="section-title">Du feu de Mersin à votre table</h2>
-          <p>{restaurant.story}</p>
+          <span className="section-label">{t.story.label}</span>
+          <h2 className="section-title">{t.story.title}</h2>
+          <p>{t.story.body}</p>
           <div className="story-highlight">
-            <strong>Le Tantuni</strong>
-            <p style={{ margin: 0 }}>{restaurant.tantuni}</p>
+            <strong>{t.story.tantuniTitle}</strong>
+            <p style={{ margin: 0 }}>{t.story.tantuniBody}</p>
           </div>
-          <p>
-            Nos chefs partagent leur expérience à travers la préparation, la
-            découpe et la cuisson de nos plats et de nos viandes 100&nbsp;%
-            maison.
-          </p>
+          <p>{t.story.chefs}</p>
           <div className="story-facts">
             <div>
               <strong>20+</strong>
-              <span>Ans d&apos;expérience</span>
+              <span>{t.story.years}</span>
             </div>
             <div>
               <strong>Mersin</strong>
-              <span>Origine du Tantuni</span>
+              <span>{t.story.origin}</span>
             </div>
             <div>
-              <strong>7j/7</strong>
-              <span>Ouvert pour vous</span>
+              <strong>7/7</strong>
+              <span>{t.story.openDaily}</span>
             </div>
           </div>
         </motion.div>

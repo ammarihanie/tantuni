@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
 import { restaurant } from '../data'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export function ContactSection() {
+  const { t, dir } = useLanguage()
+
   return (
     <section id="contact" className="section contact-section">
       <motion.div
@@ -11,23 +14,20 @@ export function ContactSection() {
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.7 }}
       >
-        <span className="section-label">Contact</span>
-        <h2 className="section-title">Nous vous attendons</h2>
-        <p className="section-desc">
-          Passez nous voir à Combs-la-Ville ou appelez pour commander. Accès
-          facile via le RER D.
-        </p>
+        <span className="section-label">{t.contact.label}</span>
+        <h2 className="section-title">{t.contact.title}</h2>
+        <p className="section-desc">{t.contact.desc}</p>
       </motion.div>
 
       <div className="contact-grid">
         <motion.div
-          initial={{ opacity: 0, x: -24 }}
+          initial={{ opacity: 0, x: dir === 'rtl' ? 24 : -24 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
           <div className="contact-block">
-            <h3>Adresse</h3>
+            <h3>{t.contact.address}</h3>
             <p>
               <strong style={{ color: 'var(--bone)', fontWeight: 500 }}>
                 {restaurant.name}
@@ -42,25 +42,25 @@ export function ContactSection() {
           </div>
 
           <div className="contact-block">
-            <h3>Horaires</h3>
-            <p>{restaurant.hours}</p>
-            <p style={{ marginTop: '0.5rem' }}>{restaurant.access}</p>
+            <h3>{t.contact.hours}</h3>
+            <p>{t.contact.hoursValue}</p>
+            <p style={{ marginTop: '0.5rem' }}>{t.contact.access}</p>
           </div>
 
           <div className="contact-block">
-            <h3>Téléphone</h3>
+            <h3>{t.contact.phone}</h3>
             <p>
-              Mob.&nbsp;
+              {t.contact.mobile}&nbsp;
               <a href={restaurant.mobileHref}>{restaurant.mobile}</a>
               <br />
-              Tél.&nbsp;
+              {t.contact.landline}&nbsp;
               <a href={restaurant.phoneHref}>{restaurant.phone}</a>
             </p>
           </div>
 
           <div className="contact-actions">
             <a className="btn btn-primary" href={restaurant.phoneHref}>
-              Appeler le restaurant
+              {t.contact.callRestaurant}
             </a>
             <a
               className="btn btn-ghost"
@@ -68,7 +68,7 @@ export function ContactSection() {
               target="_blank"
               rel="noreferrer"
             >
-              Itinéraire
+              {t.contact.directions}
             </a>
           </div>
         </motion.div>
@@ -82,7 +82,7 @@ export function ContactSection() {
           style={{ transformPerspective: 900 }}
         >
           <iframe
-            title="Carte Tantuni Grill Combs-la-Ville"
+            title={t.contact.mapTitle}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Tantuni+Grill+2+bis+avenue+de+Quincy+Combs-la-Ville&output=embed"

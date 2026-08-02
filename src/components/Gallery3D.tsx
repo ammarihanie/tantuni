@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react'
 import { motion } from 'framer-motion'
 import { gallery } from '../data'
+import { useLanguage } from '../i18n/LanguageContext'
 
 export function Gallery3D() {
+  const { t, dir } = useLanguage()
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const dragX = useRef(0)
@@ -27,10 +29,15 @@ export function Gallery3D() {
 
   const onPointerUp = (e: PointerEvent<HTMLDivElement>) => {
     const delta = e.clientX - dragX.current
-    if (delta < -50) next()
-    else if (delta > 50) prev()
+    const goNext = dir === 'rtl' ? delta > 50 : delta < -50
+    const goPrev = dir === 'rtl' ? delta < -50 : delta > 50
+    if (goNext) next()
+    else if (goPrev) prev()
     setPaused(false)
   }
+
+  const current = gallery[index]
+  const copy = t.gallery.items[current.key]
 
   return (
     <section id="galerie" className="section gallery-section">
@@ -41,12 +48,9 @@ export function Gallery3D() {
         viewport={{ once: true, margin: '-80px' }}
         transition={{ duration: 0.7 }}
       >
-        <span className="section-label">Galerie</span>
-        <h2 className="section-title">Nos plats en lumière</h2>
-        <p className="section-desc">
-          Faites glisser le carrousel 3D — sandwichs, assiettes et grillades
-          préparés chaque jour dans notre cuisine.
-        </p>
+        <span className="section-label">{t.gallery.label}</span>
+        <h2 className="section-title">{t.gallery.title}</h2>
+        <p className="section-desc">{t.gallery.desc}</p>
       </motion.div>
 
       <div
@@ -57,8 +61,8 @@ export function Gallery3D() {
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         role="region"
-        aria-roledescription="carrousel"
-        aria-label="Photos des plats"
+        aria-roledescription="carousel"
+        aria-label={t.gallery.aria}
       >
         <div
           className="carousel-stage"
@@ -71,6 +75,7 @@ export function Gallery3D() {
             const dist = Math.min(offset, n - offset)
             const sideClass =
               dist === 0 ? '' : dist === 1 ? 'is-side' : 'is-far'
+            const itemCopy = t.gallery.items[item.key]
             return (
               <div
                 key={item.src}
@@ -80,7 +85,11 @@ export function Gallery3D() {
                 }}
               >
                 <figure>
-                  <img src={item.src} alt={item.alt} draggable={false} />
+                  <img
+                    src={item.src}
+                    alt={itemCopy.alt}
+                    draggable={false}
+                  />
                 </figure>
               </div>
             )
@@ -89,24 +98,24 @@ export function Gallery3D() {
       </div>
 
       <p className="carousel-caption" aria-live="polite">
-        {gallery[index].label}
+        {copy.label}
       </p>
 
       <div className="carousel-nav">
-        <button className="carousel-btn" onClick={prev} aria-label="Photo précédente">
-          ←
+        <button className="carousel-btn" onClick={prev} aria-label={t.gallery.prev}>
+          {dir === 'rtl' ? '→' : '←'}
         </button>
-        <button className="carousel-btn" onClick={next} aria-label="Photo suivante">
-          →
+        <button className="carousel-btn" onClick={next} aria-label={t.gallery.next}>
+          {dir === 'rtl' ? '←' : '→'}
         </button>
       </div>
 
-      <div className="carousel-dots" role="tablist" aria-label="Navigation galerie">
+      <div className="carousel-dots" role="tablist" aria-label={t.gallery.nav}>
         {gallery.map((item, i) => (
           <button
             key={item.src}
             className={i === index ? 'active' : ''}
-            aria-label={item.label}
+            aria-label={t.gallery.items[item.key].label}
             aria-selected={i === index}
             onClick={() => setIndex(i)}
           />
