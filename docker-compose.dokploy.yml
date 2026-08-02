@@ -1,6 +1,6 @@
-# Compose pour déploiement Dokploy
-# Dans Dokploy : type Compose, Compose Path = ./docker-compose.dokploy.yml
-# Domaine : configure-le dans l'UI Dokploy (Domains) OU via APP_DOMAIN ci-dessous.
+# Dokploy — Compose Path: ./docker-compose.dokploy.yml
+# Domaine : à configurer dans l'onglet Domains de Dokploy (pas de labels Traefik ici).
+# Service à sélectionner pour le domaine : web · Port : 80
 
 services:
   web:
@@ -8,17 +8,10 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    # Port interne uniquement — Traefik (Dokploy) route vers 80
-    expose:
+    ports:
       - "80"
     networks:
       - dokploy-network
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.tantuni-grill.rule=Host(`${APP_DOMAIN:-tantuni.localhost}`)
-      - traefik.http.routers.tantuni-grill.entrypoints=websecure
-      - traefik.http.routers.tantuni-grill.tls.certResolver=letsencrypt
-      - traefik.http.services.tantuni-grill.loadbalancer.server.port=80
 
 networks:
   dokploy-network:
